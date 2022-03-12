@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  production:
+    build: .
+    volumes:
+      - ./public/:/usr/share/nginx/html
+    ports:
+      - 80:80

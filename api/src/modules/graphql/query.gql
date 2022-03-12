@@ -1,0 +1,30 @@
+# import Post from "./post.gql"
+
+"""
+Methods for retrieving data.
+"""
+type Query {
+  """
+  Get single post by its ID.
+  """
+  post(
+    "Unique post ID."
+    id: Int
+  ): Post
+  """
+  Get last posts, ordered by date created.
+  """
+  lastPosts(
+    "How many posts should be returned."
+    amount: Int
+  ): [Post!]!
+  """
+  Get range of posts, ordered by date created.
+  """
+  rangePosts(
+    "Where to start, ordered by date created."
+    first: Int,
+    "Where to end, ordered by date created."
+    last: Int
+  ): [Post!]!
+}
