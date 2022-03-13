@@ -2,18 +2,9 @@
 
 This project consists of several microservices ran by *docker compose*.
 
-The microservices are following:
-
- - **API** - communicates with frontend and backend
- - **DB** - MySQL database holding Posts and Authors
- - **Redis** - database cache
- - **Client** - frontend using the API - not working yet
- - **CDN** - Nginx for storing assets, mostly images - not working yet
- - **Admin** - frontend for uploading and editing data in the database - work has not started yet
-
 ## API
 
-Runs in *Nodejs*, is written in *TypeScript*. Core technologies *express*, *mysql2*, *redis* and *graphql* NPM packages.
+Runs in *Nodejs*, is written in *TypeScript*. Core technologies are [express](https://github.com/expressjs/express), [mysql2](https://github.com/sidorares/node-mysql2), [redis](https://github.com/redis/node-redis) and [graphql](https://github.com/graphql/graphql-js) NPM packages.
 
 ## DB
 
