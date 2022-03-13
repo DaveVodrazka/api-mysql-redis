@@ -2,6 +2,13 @@ export type PostData = {
   title: string;
   firstParagraph: string;
   article: string;
+  firstName: string;
+  lastName: string;
+}
+export type PostDataInsert = {
+  title: string;
+  firstParagraph: string;
+  article: string;
   authorId: number;
 }
 export type NullablePostData = PostData | null;

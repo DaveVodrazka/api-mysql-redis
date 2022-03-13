@@ -10,6 +10,10 @@ type Post {
   firstParagraph: String
   "Body of the article."
   article: String
+  "Authors first name."
+  firstName: String
+  "Authors last name."
+  lastName: String
   "Date the post was created."
   created: String
   "Date the post was last updated."

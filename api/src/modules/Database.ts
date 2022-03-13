@@ -8,7 +8,12 @@ import {
   MYSQL_TABLES,
   MYSQL_USER,
 } from "../constants.js";
-import { NullablePostData, NullablePostDataList, PostData, PostDataList } from "../types.js";
+import {
+  NullablePostData,
+  NullablePostDataList,
+  PostDataInsert,
+  PostDataList,
+} from "../types.js";
 
 export class Database {
   connection: mysql.Connection;
@@ -22,13 +27,13 @@ export class Database {
         database: MYSQL_DB_NAME,
         port: MYSQL_PORT,
       });
-    } catch(e) {
+    } catch (e) {
       console.log("Failed to connect to the databse");
       throw e;
     }
   }
 
-  addPost(postData: PostData): void {
+  addPost(postData: PostDataInsert): void {
     if (!this.validatePostData(postData)) {
       console.log("Failed to validate post data", postData);
       return;
@@ -42,12 +47,12 @@ export class Database {
     this.runQuery(query);
   }
 
-  validatePostData(postData: PostData): boolean {
+  validatePostData(postData: PostDataInsert): boolean {
     const { title, firstParagraph, article, authorId } = postData;
     if (![title, firstParagraph, article, authorId].every(Boolean)) {
       return false;
     }
-    if (![title, firstParagraph, article].every(x => typeof x === "string")) {
+    if (![title, firstParagraph, article].every((x) => typeof x === "string")) {
       return false;
     }
     if (typeof authorId !== "number") {
@@ -71,7 +76,7 @@ export class Database {
   private async retrieve(query: string) {
     const result = await this.runQuery(query);
 
-    if(this.validateResponse(result)) {
+    if (this.validateResponse(result)) {
       return result as PostDataList;
     }
     return null;
@@ -85,18 +90,42 @@ export class Database {
   }
 
   async getPostById(id: number): Promise<NullablePostData> {
-    const query = `SELECT * FROM ${MYSQL_TABLES.POSTS} WHERE ${MYSQL_IDS.POST_ID}=${id};`;
+    const { POSTS: p, AUTHORS: a } = MYSQL_TABLES;
+    const { POST_ID: pid, AUTHOR_ID: aid } = MYSQL_IDS;
+    const query = `
+      SELECT ${p}.title, ${p}.firstParagraph, ${p}.article, ${p}.created, ${a}.firstName, ${a}.lastName
+      FROM ${p}
+      LEFT JOIN ${a}
+      ON ${p}.${aid}=${a}.${aid}
+      WHERE ${p}.${pid}=${id};
+    `;
     const res = await this.retrieve(query);
-    return res && res[0] || null;
+    return (res && res[0]) || null;
   }
 
   async getLastPosts(n: number): Promise<NullablePostDataList> {
-    const query = `SELECT * FROM ${MYSQL_TABLES.POSTS} ORDER BY created DESC LIMIT ${n};`;
+    const { POSTS: p, AUTHORS: a } = MYSQL_TABLES;
+    const { AUTHOR_ID: aid } = MYSQL_IDS;
+    const query = `
+      SELECT ${p}.title, ${p}.firstParagraph, ${p}.article, ${p}.created, ${a}.firstName, ${a}.lastName
+      FROM ${p}
+      LEFT JOIN ${a}
+      ON ${p}.${aid}=${a}.${aid}
+      ORDER BY created DESC LIMIT ${n};
+    `;
     return await this.retrieve(query);
   }
 
   async getPostsRange(min: number, max: number): Promise<NullablePostDataList> {
-    const query = `SELECT * FROM ${MYSQL_TABLES.POSTS} ORDER BY created DESC LIMIT ${min}, ${max};`;
+    const { POSTS: p, AUTHORS: a } = MYSQL_TABLES;
+    const { AUTHOR_ID: aid } = MYSQL_IDS;
+    const query = `
+      SELECT ${p}.title, ${p}.firstParagraph, ${p}.article, ${p}.created, ${a}.firstName, ${a}.lastName
+      FROM ${p}
+      LEFT JOIN ${a}
+      ON ${p}.${aid}=${a}.${aid}
+      ORDER BY created DESC LIMIT ${min}, ${max};
+    `;
     return await this.retrieve(query);
   }
 }
