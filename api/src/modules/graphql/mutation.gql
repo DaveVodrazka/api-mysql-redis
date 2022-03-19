@@ -1,10 +1,25 @@
-# import Post from "./post.gql"
-
 type Mutation {
+  """
+  Add new magazine post.
+  """
   addPost(
+    "Title of the article."
     title: String
+    "First paragraph to be displayed in the thumbnails."
     firstParagraph: String
+    "Body of the article."
     article: String
+    "ID of the post author."
     authorId: Int
+  ):String
+
+  """
+  Add new author.
+  """
+  addAuthor(
+    "Author's first name."
+    firstName: String
+    "Author's last name."
+    lastName: String
   ):String
 }

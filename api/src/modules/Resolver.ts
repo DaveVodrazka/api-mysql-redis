@@ -14,7 +14,6 @@ export class Resolver {
 
   async init() {
     await this.cache.init();
-    console.log("Resolver is ready");
   }
 
   async post(args) {
@@ -108,5 +107,13 @@ export class Resolver {
       ).toFixed(2)}ms`
     );
     return result;
+  }
+
+  addPost(args) {
+    this.database.addPost(args);
+  }
+
+  addAuthor(args) {
+    this.database.addAuthor(args);
   }
 }

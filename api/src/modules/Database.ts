@@ -33,7 +33,7 @@ export class Database {
     }
   }
 
-  addPost(postData: PostDataInsert): void {
+  async addPost(postData: PostDataInsert) {
     if (!this.validatePostData(postData)) {
       console.log("Failed to validate post data", postData);
       return;
@@ -41,13 +41,26 @@ export class Database {
 
     const { title, firstParagraph, article, authorId } = postData;
     const query = `
-        INSERT INTO ${MYSQL_DB_NAME} (title, firstParagraph, article, authorId)
-        VALUES ("${title}", "${firstParagraph}", "${article}", ${authorId})
+        INSERT INTO ${MYSQL_TABLES.POSTS} (title, firstParagraph, article, authorId)
+        VALUES ("${title}", "${firstParagraph}", "${article}", ${authorId});
     `;
-    this.runQuery(query);
+    this.runQuery(query).then((x) => {console.log(x)});
   }
 
-  validatePostData(postData: PostDataInsert): boolean {
+  async addAuthor({ firstName, lastName }) {
+    if (!firstName || !lastName) {
+      console.log("Failed to validate author data", { firstName, lastName });
+      return;
+    }
+  
+    const query = `
+        INSERT INTO ${MYSQL_TABLES.AUTHORS} (firstName, lastName)
+        VALUES ("${firstName}", "${lastName}");
+    `;
+    this.runQuery(query).then((x) => {console.log(x)});
+  }
+
+  private validatePostData(postData: PostDataInsert): boolean {
     const { title, firstParagraph, article, authorId } = postData;
     if (![title, firstParagraph, article, authorId].every(Boolean)) {
       return false;
