@@ -1,3 +1,5 @@
+# import Author from "./author.gql"
+
 type Mutation {
   """
   Add new magazine post.
@@ -11,15 +13,15 @@ type Mutation {
     article: String
     "ID of the post author."
     authorId: Int
-  ):String
+  ): String!
 
   """
   Add new author.
   """
   addAuthor(
     "Author's first name."
-    firstName: String
+    firstName: String!
     "Author's last name."
-    lastName: String
-  ):String
+    lastName: String!
+  ): String!
 }

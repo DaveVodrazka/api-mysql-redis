@@ -109,11 +109,13 @@ export class Resolver {
     return result;
   }
 
-  addPost(args) {
-    this.database.addPost(args);
+  async addPost(args) {
+    return await this.database.addPost(args);
   }
 
-  addAuthor(args) {
-    this.database.addAuthor(args);
+  async addAuthor(args) {
+    const res = await this.database.addAuthor(args);
+    console.log(res);
+    return res;
   }
 }

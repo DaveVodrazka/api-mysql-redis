@@ -1,21 +1,19 @@
-# import Author from "author.gql"
-
 """
 Magazine post type.
 """
 type Post {
   "Title of the article."
-  title: String
+  title: String!
   "First paragraph to be displayed in the thumbnails."
-  firstParagraph: String
+  firstParagraph: String!
   "Body of the article."
-  article: String
+  article: String!
   "Authors first name."
-  firstName: String
+  firstName: String!
   "Authors last name."
-  lastName: String
+  lastName: String!
   "Date the post was created."
-  created: String
+  created: String!
   "Date the post was last updated."
   updated: String
 }

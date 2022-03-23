@@ -23,8 +23,8 @@ type Query {
   """
   rangePosts(
     "Where to start, ordered by date created."
-    first: Int,
+    first: Int
     "Where to end, ordered by date created."
     last: Int
-  ): [Post!]!
+  ): [Post!]
 }

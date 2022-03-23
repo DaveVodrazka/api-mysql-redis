@@ -9,10 +9,12 @@ import {
   MYSQL_USER,
 } from "../constants.js";
 import {
+  Author,
   NullablePostData,
   NullablePostDataList,
   PostDataInsert,
   PostDataList,
+  ResultInfo,
 } from "../types.js";
 
 export class Database {
@@ -33,7 +35,7 @@ export class Database {
     }
   }
 
-  async addPost(postData: PostDataInsert) {
+  async addPost(postData: PostDataInsert): Promise<ResultInfo> {
     if (!this.validatePostData(postData)) {
       console.log("Failed to validate post data", postData);
       return;
@@ -44,12 +46,13 @@ export class Database {
         INSERT INTO ${MYSQL_TABLES.POSTS} (title, firstParagraph, article, authorId)
         VALUES ("${title}", "${firstParagraph}", "${article}", ${authorId});
     `;
-    this.runQuery(query).then((x) => {console.log(x)});
+    return this.insert(query);
   }
 
-  async addAuthor({ firstName, lastName }) {
+  async addAuthor(authorData: Author): Promise<ResultInfo> {
+    const { firstName, lastName } = authorData;
     if (!firstName || !lastName) {
-      console.log("Failed to validate author data", { firstName, lastName });
+      console.log("Failed to validate author data", authorData);
       return;
     }
   
@@ -57,7 +60,7 @@ export class Database {
         INSERT INTO ${MYSQL_TABLES.AUTHORS} (firstName, lastName)
         VALUES ("${firstName}", "${lastName}");
     `;
-    this.runQuery(query).then((x) => {console.log(x)});
+    return this.insert(query);
   }
 
   private validatePostData(postData: PostDataInsert): boolean {
@@ -86,13 +89,19 @@ export class Database {
     });
   }
 
-  private async retrieve(query: string) {
+  private async retrieve(query: string): Promise<NullablePostDataList> {
     const result = await this.runQuery(query);
 
     if (this.validateResponse(result)) {
       return result as PostDataList;
     }
     return null;
+  }
+
+  private async insert(query: string): Promise<ResultInfo> {
+    const result = await this.runQuery(query);
+    console.log("result from insert", result);
+    return result ? "success" : "failure";
   }
 
   private validateResponse(res: any): boolean {
