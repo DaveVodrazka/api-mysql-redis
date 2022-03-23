@@ -7,6 +7,14 @@ services:
     depends_on:
       - "redis"
       - "db"
+    environment:
+      - MYSQL_PORT=3306
+      - MYSQL_DB_NAME
+      - MYSQL_HOST
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - API_PORT
+      - CACHE_ADDRESS
     ports:
       - 3000:3000
     networks:
@@ -20,7 +28,7 @@ services:
     networks:
       - backend
 
-  redis:
+  cache:
     image: redis
     networks:
       - backend

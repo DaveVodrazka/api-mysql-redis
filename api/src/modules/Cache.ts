@@ -1,6 +1,5 @@
 import { createClient } from "redis";
 
-import { REDIS_ADDRESS } from "../constants.js";
 import { CacheConfig, NullablePostData, NullablePostDataList } from "../types.js";
 
 export class Cache {
@@ -14,7 +13,7 @@ export class Cache {
     };
     Object.assign(this.conf, conf);
     this.client = createClient({
-      url: REDIS_ADDRESS,
+      url: process.env.CACHE_ADDRESS,
     });
     this.setEvents();
   }

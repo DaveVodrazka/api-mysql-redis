@@ -1,13 +1,5 @@
 import mysql from "mysql2";
-import {
-  MYSQL_DB_NAME,
-  MYSQL_HOST,
-  MYSQL_IDS,
-  MYSQL_PASSWORD,
-  MYSQL_PORT,
-  MYSQL_TABLES,
-  MYSQL_USER,
-} from "../constants.js";
+import { MYSQL_IDS, MYSQL_TABLES } from "../constants.js";
 import {
   Author,
   NullablePostData,
@@ -23,11 +15,11 @@ export class Database {
   constructor() {
     try {
       this.connection = mysql.createConnection({
-        host: MYSQL_HOST,
-        user: MYSQL_USER,
-        password: MYSQL_PASSWORD,
-        database: MYSQL_DB_NAME,
-        port: MYSQL_PORT,
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DB_NAME,
+        port: parseInt(process.env.MYSQL_PORT, 10),
       });
     } catch (e) {
       console.log("Failed to connect to the databse");
@@ -55,7 +47,7 @@ export class Database {
       console.log("Failed to validate author data", authorData);
       return;
     }
-  
+
     const query = `
         INSERT INTO ${MYSQL_TABLES.AUTHORS} (firstName, lastName)
         VALUES ("${firstName}", "${lastName}");

@@ -2,15 +2,16 @@ import express, { Application } from "express";
 import { graphqlHTTP } from "express-graphql";
 import cors from "cors";
 
-import { API_PORT } from "../constants.js";
 import { schema } from "./graphql/schema.js";
 import { Resolver } from "./Resolver.js";
 
 export class Server {
   app: Application;
   resolver: Resolver;
+  #port: number;
 
   constructor() {
+    this.#port = parseInt(process.env.API_PORT, 10);
     this.app = express();
     this.resolver = new Resolver();
   }
@@ -30,9 +31,9 @@ export class Server {
   }
 
   private listen() {
-    this.app.listen(API_PORT, () => {
+    this.app.listen(this.#port, () => {
       console.log(
-        `API running on port ${API_PORT}\nGQL playground accessible at http://localhost:${API_PORT}/graphql`
+        `API running on port ${this.#port}\nGQL playground accessible at http://localhost:${this.#port}/graphql`
       );
     });
   }
